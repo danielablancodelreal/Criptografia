@@ -132,7 +132,7 @@ def inversa_mod_p(n,p):
             m, x, y = bezout(n,p,[1,1],[0,1], mcd(n,p),n,p)
         else: 
             m, x, y = bezout(n,p,[1,0],[0,1], mcd(n,p),n,p)
-        return x
+        return x%p
 
 def euler(n):
     #Comprobamos que n es primo para poder aplicar una propiedad

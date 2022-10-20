@@ -3,8 +3,8 @@ import random
 
 def generar_claves(min_primo, max_primo):
     lista_primos = modular.lista_primos(min_primo,max_primo)
-    p1 = lista_primos.pop(random.randint(0,len(lista_primos)))
-    p2 = lista_primos.pop(random.randint(0,len(lista_primos)))
+    p1 = lista_primos.pop(random.randint(0,len(lista_primos)-1))
+    p2 = lista_primos.pop(random.randint(0,len(lista_primos)-1))
     n = p1*p2
     phin = (p1-1)*(p2-1)
     continuar = True
@@ -33,20 +33,27 @@ def descifrar_rsa(c,n,d,digitos_padding):
 def cifrar_cadena_rsa(s,n,e,digitos_padding):
     cList = []
     for i in range(len(s)):
-        u = s[i]
+        u = ord(str(s[i]))
         cList.append(modular.potencia_mod_p(u,e,n))
     return cList
 
 def descifrar_cadena_rsa(cList,n,d,digitos_padding):
     m = ""
     for i in range(len(cList)):
-        u = modular.potencia_mod_p(cList[i],d,n)
+        t = modular.potencia_mod_p(int(cList[i]),d,n)
+        u = chr(t)
         m += u
     return m
 
-def rompler_clave(n,e):
-    pass
+def romper_clave(n,e):
+    phin = modular.euler(n)
+    d = modular.inversa_mod_p(e,phin)
+    return d
 
 def ataque_texto_plano(cList,n,e):
-    pass
+    d = romper_clave(n,e)
+    print(d)
+    mensaje = descifrar_cadena_rsa(cList,n,d,0)
+    return mensaje
+
 
