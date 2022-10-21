@@ -31,17 +31,21 @@ def eliminar_padding(m,digitos_padding):
     return m
 
 def cifrar_rsa(m,n,e,digitos_padding):
+    m = aplicar_padding(m,digitos_padding)
     c = modular.potencia_mod_p(m,e,n)
+
     return c
 
 def descifrar_rsa(c,n,d,digitos_padding):
     m = modular.potencia_mod_p(c,d,n)
+    m = eliminar_padding(m,digitos_padding)
     return m
 
 def cifrar_cadena_rsa(s,n,e,digitos_padding):
     cList = []
     for i in range(len(s)):
         u = ord(str(s[i]))
+        u = aplicar_padding(u,digitos_padding)
         cList.append(modular.potencia_mod_p(u,e,n))
     return cList
 
@@ -49,6 +53,7 @@ def descifrar_cadena_rsa(cList,n,d,digitos_padding):
     m = ""
     for i in range(len(cList)):
         t = modular.potencia_mod_p(int(cList[i]),d,n)
+        t = eliminar_padding(t)
         u = chr(t)
         m += u
     return m
