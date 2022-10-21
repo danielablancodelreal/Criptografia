@@ -45,15 +45,13 @@ def cifrar_cadena_rsa(s,n,e,digitos_padding):
     cList = []
     for i in range(len(s)):
         u = ord(str(s[i]))
-        u = aplicar_padding(u,digitos_padding)
-        cList.append(modular.potencia_mod_p(u,e,n))
+        cList.append(cifrar_rsa(u,n,e,digitos_padding))
     return cList
 
 def descifrar_cadena_rsa(cList,n,d,digitos_padding):
     m = ""
     for i in range(len(cList)):
-        t = modular.potencia_mod_p(int(cList[i]),d,n)
-        t = eliminar_padding(t, digitos_padding)
+        t = descifrar_rsa(cList[i],n,d,digitos_padding)
         u = chr(t)
         m += u
     return m
