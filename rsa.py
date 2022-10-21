@@ -53,7 +53,7 @@ def descifrar_cadena_rsa(cList,n,d,digitos_padding):
     m = ""
     for i in range(len(cList)):
         t = modular.potencia_mod_p(int(cList[i]),d,n)
-        t = eliminar_padding(t)
+        t = eliminar_padding(t, digitos_padding)
         u = chr(t)
         m += u
     return m
