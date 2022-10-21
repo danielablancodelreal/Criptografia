@@ -16,11 +16,19 @@ def generar_claves(min_primo, max_primo):
     claves = (n,e,d)
     return claves
 
+
 def aplicar_padding(m,digitos_padding):
-    pass
+    m = str(m)
+    for i in range(0,digitos_padding):
+        m += str(random.randint(0,9))
+    m = int(m)
+    return m
 
 def eliminar_padding(m,digitos_padding):
-    pass
+    m = str(m)
+    m = m[:-digitos_padding]
+    m = int(m)
+    return m
 
 def cifrar_rsa(m,n,e,digitos_padding):
     c = modular.potencia_mod_p(m,e,n)
