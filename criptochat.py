@@ -98,7 +98,6 @@ if __name__ == '__main__':
             elif op == 6:
                 try:
                     digitos_padding = int(input("¿Cuántos dígitos de padding desea tener? : "))
-                    print("Le recordamos que para que las claves tengan este número de cifras de padding, va a tener que generar nuevas claves")
                 except:
                     error = True
             elif op == 7:
@@ -118,4 +117,4 @@ if __name__ == '__main__':
             print("---------------------------------------------------------------------------------------")
 
         except:
-            print("AA No ha introducido una opción válida")
+            print("No ha introducido una opción válida")
