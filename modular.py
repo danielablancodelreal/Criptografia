@@ -150,3 +150,87 @@ def euler(n):
     for i in range(len(lista)):
         contador *= (lista[i]-1)*(lista[i]**(dic[lista[i]]-1))
     return contador
+
+def legendre(n,p):
+    #comprobamos que p es primo
+    if not es_primo(p):
+        return
+    #calculamos el símbolo de Legendre según su definición
+    elif n%p == 0: 
+        return 0
+    elif math.sqrt(n%p) == int(math.sqrt(n%p)): 
+        return 1
+    else: 
+        return -1
+
+def resolver_sistema_congruencias(a,b,p):
+    if coprimos_n(p) == True:
+        a_ec = []
+        M = 1
+        for i in range(len(a)):
+            a_ec.append(inversa_mod_p(a[i],p[i])*b[i])
+            M *= p[i]
+            
+        lista = []
+        for j in range(len(a_ec)):
+            lista.append(inversa_mod_p((M/p[j]), p[j]))
+        
+        x = 0
+        for k in range(len(a_ec)):
+            x += a_ec[k]*lista[k]*(M/p[k])
+        
+        return (int(x%M), M)
+
+def mcd_n(lista,a,n):
+    m = mcd(a,lista[n])
+    if n+1 == len(lista):
+        return m
+    return mcd_n(lista, m, n+1)
+
+def coprimos_n(p):
+    for i in range(len(p)):
+        for j in range(i+1, len(p)):
+            divisor = mcd(p[i],p[j])
+            if divisor > 1:
+                return False
+    return True
+
+def raiz_mod_p(n,p):
+    if es_primo(p) and p != 2:
+        n %= p
+        if n == 0:
+            return n
+        elif n == 1:
+            return n, p-1
+        elif legendre(n, p) == 0:
+            return 0
+        elif legendre(n**(p-1), p) == 1:
+            for a in range(0,p):
+                w = (((a**2-n)%p)**((p-1)/2))%p
+                if int(w) == p-1:break
+            exponente = ctb((p+1)/2,2)
+            x1 = [a,1]
+            x2 = mult(x1,x1,a**2-n,p)
+            for i in range(1, len(exponente)):
+                if exponente[i] == 0:
+                    x2 = mult(x2,x1,a**2-n,p)
+                    x1 = mult(x1,x1,a**2-n,p)
+                else:
+                    x1 = mult(x1,x2,a**2-n,p)
+                    x2 = mult(x2,x2,a**2-n,p)
+            return (x1[0], -x1[0]%p)
+        else:
+            return False
+
+def mult(l1,l2,o,p):
+    return [(l1[0]*l2[0]+l1[1]*l2[1]*o)%p,(l1[0]*l2[1]+l1[1]*l2[0]*o)%p]
+
+def ctb(n,b):
+    if n<2:
+        return [n]
+    t = n
+    r = []
+    while t!=0:
+        r = [t%b] + r
+        t /= b
+    return r
