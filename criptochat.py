@@ -1,5 +1,4 @@
 import rsa
-import time
 import os
 
 def menu():
