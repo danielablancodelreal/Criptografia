@@ -22,6 +22,8 @@ def lista_primos(a,b):
     # Añadimos el 2 a la lista en caso de que el primer número sea menor o igual que este
     # aparte, incializamos la busqueda en 3, para saltarnos todos los primos.
     # Si b mayor que a, no hay solución
+    if a <= 1:
+        a = 2
     if a > b:
         return
     if a <= 2: 
@@ -41,7 +43,7 @@ def factorizar(n):
     i = 2
     a = n
     contador= 0
-    while i*i < a:
+    while i*i <= a:
         if n%i == 0:
             contador += 1
             n = n//i
@@ -55,7 +57,9 @@ def factorizar(n):
         diccionario[n] = 1
     return diccionario
 
-def mcd(a,b):
+def mcd(a,b): ######################################## DEMASIADOS ARGS
+    if a == 0 or b == 0:
+        return max(a,b)
     if a < 0 or b <0: 
         return 1
     elif a%b == 0 or b%a == 0: 
@@ -65,8 +69,8 @@ def mcd(a,b):
     else: 
         return mcd(min(a,b), max(a,b) % min(a,b))
 
-def bezout(a,b,l1,l2,mcd,a0,b0):
-    if  a != mcd and b != mcd:
+def bezout(a,b,l1,l2,mcd,a0,b0): ######################################## DEMASIADOS ARGS
+    if  a != mcd and b != mcd: #################### num negativoo (con la otra función)
         c = max(a,b) // min(a,b)
         if a > b:
             l1[0] -= l2[0] *c
@@ -104,7 +108,7 @@ def potencia_mod_p(base, exp, p):
     # Pequeño teorema de Fermat
     if p == 0:
         return
-    if exp < 0:
+    if exp < 0: ################################################ CAMBIAR
         exp %= p
     if exp == p and es_primo(p):
         return (base % p)
