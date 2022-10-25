@@ -1,8 +1,8 @@
-import sys
 import math
+from typing import List, Tuple, Dict
 
 ################################ funciones #####################################
-def es_primo(n):
+def es_primo(n: int) -> bool:
     # Cualquier número negativo no es primo
     # El 1 y el 0 no son números primos, el cero es divisible por cualquier número
     if n <= 1: 
@@ -17,7 +17,7 @@ def es_primo(n):
     # Si no ha sido divisible por ninguna de las anteriores, es primo
     return True
 
-def lista_primos(a,b):
+def lista_primos(a: int,b: int) -> List[int]:
     lista = []
     # Añadimos el 2 a la lista en caso de que el primer número sea menor o igual que este
     # aparte, incializamos la busqueda en 3, para saltarnos todos los primos.
@@ -38,7 +38,7 @@ def lista_primos(a,b):
             lista.append(i)
     return lista
 
-def factorizar(n):
+def factorizar(n: int) -> Dict[int, int]:
     diccionario = {}
     i = 2
     a = n
@@ -57,7 +57,7 @@ def factorizar(n):
         diccionario[n] = 1
     return diccionario
 
-def mcd(a,b): ######################################## DEMASIADOS ARGS
+def mcd(a: int, b: int) -> int:
     if a == 0 or b == 0:
         return max(a,b)
     if a < 0 or b <0: 
@@ -69,24 +69,35 @@ def mcd(a,b): ######################################## DEMASIADOS ARGS
     else: 
         return mcd(min(a,b), max(a,b) % min(a,b))
 
-def bezout(a,b,l1,l2,mcd,a0,b0): ######################################## DEMASIADOS ARGS
-    if  a != mcd and b != mcd: #################### num negativoo (con la otra función)
-        c = max(a,b) // min(a,b)
-        if a > b:
-            l1[0] -= l2[0] *c
-            l1[1] -= l2[1] *c
-            a = a%b
+def bezout_recursivo(a: int, b: int, l1: List[int], l2: List[int], mcd: int, a0: int, b0: int) -> Tuple[int,int,int]:
+    if  a != mcd and b != mcd:
+        if a > b and b < 0 and a > 0:
+            l2[0] += l1[0]
+            l2[1] += l1[1]
+            b += a
+        elif b > a and a < 0 and b > 0:
+            l1[0] += l2[0]
+            l1[1] += l2[1]
+            a += b
+        elif a > b:
+            l1[0] -= l2[0]
+            l1[1] -= l2[1]
+            a -= b
         elif b > a:
-            l2[0] -= l1[0] *c
-            l2[1] -= l1[1] *c
-            b = b%a
-        return bezout(a,b,l1,l2,mcd,a0,b0)
+            l2[0] -= l1[0]
+            l2[1] -= l1[1]
+            b -= a 
+        return bezout_recursivo(a,b,l1,l2,mcd,a0,b0)
     if mcd == l1[0]*a0 + l1[1]*b0:
         return(mcd, l1[0], l1[1])
     else:
         return(mcd, l2[0], l2[1])
 
-def coprimos(a,b):
+def bezout(a: int, b: int) -> Tuple[int,int,int]:
+    m = mcd(a,b)
+    return bezout_recursivo(a,b,[1,0],[0,1], m,a,b)
+
+def coprimos(a: int, b: int) -> bool:
     # Si son negativos, se transforman a su valor absoluto
     if a < 0 or b < 0: 
         a = abs(a)
@@ -104,12 +115,13 @@ def coprimos(a,b):
     else: 
         return coprimos(min(a,b), max(a,b) % min(a,b))
 
-def potencia_mod_p(base, exp, p):
-    # Pequeño teorema de Fermat
+def potencia_mod_p(base: int, exp: int, p: int) -> int:
     if p == 0:
         return
     if exp < 0: ################################################ CAMBIAR
-        exp %= p
+        phip = euler(p)
+        exp %= phip
+    # Pequeño teorema de Fermat
     if exp == p and es_primo(p):
         return (base % p)
     # Si la base es 1, da igual el exponente
@@ -128,17 +140,13 @@ def potencia_mod_p(base, exp, p):
             exp = exp//2
         return x%p
 
-def inversa_mod_p(n,p):
+def inversa_mod_p(n: int, p: int) -> int:
     # Solo si son coprimos hay sol
     if coprimos(n,p):
-        if n<0:
-            n += p
-            m, x, y = bezout(n,p,[1,1],[0,1], mcd(n,p),n,p)
-        else: 
-            m, x, y = bezout(n,p,[1,0],[0,1], mcd(n,p),n,p)
+        m, x, y = bezout(n,p)
         return x%p
 
-def euler(n):
+def euler(n: int) -> int:
     #Comprobamos que n es primo para poder aplicar una propiedad
     if es_primo(n):
         return n-1
@@ -151,7 +159,7 @@ def euler(n):
         contador *= (lista[i]-1)*(lista[i]**(dic[lista[i]]-1))
     return contador
 
-def legendre(n,p):
+def legendre(n: int, p: int) -> int: ################################################# MAL (no nos ha dado tiempo a cambiarla)
     #comprobamos que p es primo
     if not es_primo(p):
         return
@@ -163,7 +171,7 @@ def legendre(n,p):
     else: 
         return -1
 
-def resolver_sistema_congruencias(a,b,p):
+def resolver_sistema_congruencias(a: List[int], b: List[int], p: List[int]) -> Tuple[int, int]: ################################################# FALTAN SIMPLIFICACIONES + VALORES NEGATIVOS
     if coprimos_n(p) == True:
         a_ec = []
         M = 1
@@ -181,13 +189,16 @@ def resolver_sistema_congruencias(a,b,p):
         
         return (int(x%M), M)
 
-def mcd_n(lista,a,n):
+def mcd_n_recursivo(lista: List[int], a: int, n: int) -> int:
     m = mcd(a,lista[n])
     if n+1 == len(lista):
         return m
     return mcd_n(lista, m, n+1)
 
-def coprimos_n(p):
+def mcd_n(lista: List[int]) -> int:
+    return mcd_n_recursivo(lista,lista[0],1)
+
+def coprimos_n(p: List[int]) -> bool:
     for i in range(len(p)):
         for j in range(i+1, len(p)):
             divisor = mcd(p[i],p[j])
@@ -195,7 +206,7 @@ def coprimos_n(p):
                 return False
     return True
 
-def raiz_mod_p(n,p):
+def raiz_mod_p(n: int,p: int) -> int:
     if es_primo(p) and p != 2:
         n %= p
         if n == 0:

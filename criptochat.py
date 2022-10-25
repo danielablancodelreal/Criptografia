@@ -1,5 +1,6 @@
 import rsa
 import os
+import time
 
 def menu():
     print("MENÚ")
@@ -16,11 +17,14 @@ def menu():
     return op
 
 if __name__ == '__main__':
-    error = False
+    error1 = False # Value Error
+    error2 = False # No se encuentra el archivo
     continuar = True
-    digitos_padding = 4 #Default de dígitos padding
+    digitos_padding = 0 #Default de dígitos padding
 
     while continuar:
+        error1 = False # Value Error
+        error2 = False # No se encuentra el archivo
         try:
             op = int(menu())
             if op == 1:
@@ -36,8 +40,10 @@ if __name__ == '__main__':
                     file.write(str(claves[1]) + "\n")
                     file.write(str(claves[2]))
                     file.close()
-                except:
-                    error = True
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    error2 = True
             elif op == 2:
                 try:
                     n = int(input("Introduzca el primer número de la clave pública (n): "))
@@ -51,8 +57,10 @@ if __name__ == '__main__':
                     file.write(str(e) + "\n")
                     file.write(str(d))
                     file.close()
-                except:
-                    error = True
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    error2 = True
             elif op == 3:
                 try:
                     n = int(input("Introduzca el primer número de la clave pública (n): "))
@@ -64,8 +72,10 @@ if __name__ == '__main__':
                     file.write(str(n) + "\n")
                     file.write(str(e))
                     file.close()
-                except:
-                    error = True
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    error2 = True
             elif op == 4:
                 try:
                     file = open("tusclaves.txt", "r")
@@ -79,8 +89,10 @@ if __name__ == '__main__':
                     for num in cList:
                         cif += str(num) + " "
                     print(cif)
-                except:
-                    error = True
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    error2 = True
             elif op == 5:
                 try:
                     file = open("misclaves.txt", "r")
@@ -90,15 +102,35 @@ if __name__ == '__main__':
                     d = int(contenido[2])
                     cif = input("Introduzca una lista con los con los códigos de cada letras del mensaje cifrado: ")
                     cList = cif.split(" ")
+                    for i in range(len(cList)):
+                        cList[i] = int(cList[i])
                     m = rsa.descifrar_cadena_rsa(cList,n,d,digitos_padding)
                     print(m)
-                except:
-                    error = True
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    error2 = True
             elif op == 6:
                 try:
-                    digitos_padding = int(input("¿Cuántos dígitos de padding desea tener? : "))
-                except:
-                    error = True
+                    file1 = open("misclaves.txt", "r")
+                    contenido1 = file1.readlines()
+                    file1.close()
+                    l1 = len(str(contenido1[0][:-1]))
+                    file2 = open("tusclaves.txt", "r")
+                    contenido2 = file2.readlines()
+                    file2.close()
+                    l2 = len(str(contenido2[0][:-1]))
+                    l = min(l1, l2)
+                    seguir = True
+                    while continuar:
+                        print(f"Las difras de padding no pueden superar las cifras de n, que son {l}")
+                        digitos_padding = int(input("¿Cuántos dígitos de padding desea tener? : "))
+                        if digitos_padding <= l and digitos_padding >= 0:
+                            seguir = False
+                except ValueError:
+                    error1 = True
+                except FileNotFoundError:
+                    print('Necesitas añadir las claves públicas de tanto el usuario, como el destinatario.')
             elif op == 7:
                 continuar = False
                 if os.path.exists("misclaves.txt"):
@@ -108,12 +140,14 @@ if __name__ == '__main__':
             else:
                 print("No ha introducido una opción válida")
 
-            if error:
-                print("Ha sucedido un error")
+            if error1:
+                print("ValueError")
+            if error2:
+                print("FileNotFound")
 
             print("---------------------------------------------------------------------------------------")
             input("Presione cualquier tecla para continuar")
             print("---------------------------------------------------------------------------------------")
 
-        except:
-            print("No ha introducido una opción válida")
+        except ValueError:
+            print("AA No ha introducido una opción válida")
