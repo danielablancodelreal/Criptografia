@@ -68,13 +68,16 @@ if __name__ == '__main__':
                 try:
                     n = int(input("Introduzca el primer número de la clave pública (n): "))
                     e = int(input("Introduzca el segundo número de la clave pública (e): "))
-                    existe = os.path.exists("tusclaves.txt")
-                    if existe:
-                        print("Se van a registrar unas claves privadas nuevas y se van a borrar las antiguas para el destinatario")
-                    file = open("tusclaves.txt", "w")
-                    file.write(str(n) + "\n")
-                    file.write(str(e))
-                    file.close()
+                    if n>0 and e>0 and d>0:
+                        existe = os.path.exists("tusclaves.txt")
+                        if existe:
+                            print("Se van a registrar unas claves privadas nuevas y se van a borrar las antiguas para el destinatario")
+                        file = open("tusclaves.txt", "w")
+                        file.write(str(n) + "\n")
+                        file.write(str(e))
+                        file.close()
+                    else:
+                        print("Solo se pueden introducir clavers positivas.")
                 except ValueError:
                     error1 = True
                 except FileNotFoundError:

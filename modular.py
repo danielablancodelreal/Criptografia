@@ -163,7 +163,8 @@ def euler(n: int) -> int:
         contador *= (lista[i]-1)*(lista[i]**(dic[lista[i]]-1))
     return contador
 
-def legendre(n: int, p: int) -> int: ################################################# MAL (no nos ha dado tiempo a cambiarla)
+def legendre(n: int, p: int) -> int:
+    # MAL (no nos ha dado tiempo a cambiarla)
     #comprobamos que p es primo
     if not es_primo(p):
         return
@@ -175,7 +176,8 @@ def legendre(n: int, p: int) -> int: ###########################################
     else: 
         return -1
 
-def resolver_sistema_congruencias(a: List[int], b: List[int], p: List[int]) -> Tuple[int, int]: ################################################# FALTAN SIMPLIFICACIONES + VALORES NEGATIVOS
+def resolver_sistema_congruencias(a: List[int], b: List[int], p: List[int]) -> Tuple[int, int]:
+    # FALTAN SIMPLIFICACIONES + VALORES NEGATIVOS
     if coprimos_n(p) == True:
         a_ec = []
         M = 1
