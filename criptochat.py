@@ -32,6 +32,8 @@ if __name__ == '__main__':
                     a = int(input("Introduzca un número: "))
                     b = int(input("Introduzca otro número: "))
                     claves = rsa.generar_claves(min(a,b), max(a,b))
+                    print("n: ", claves[0])
+                    print("e: ", claves[1])
                     existe = os.path.exists("misclaves.txt")
                     if existe:
                         print("Se van a generar unas claves público-privadas nuevas y se van a borrar las antiguas para el usuario")
@@ -42,8 +44,6 @@ if __name__ == '__main__':
                     file.close()
                 except ValueError:
                     error1 = True
-                except FileNotFoundError:
-                    error2 = True
             elif op == 2:
                 try:
                     n = int(input("Introduzca el primer número de la clave pública (n): "))
@@ -59,16 +59,14 @@ if __name__ == '__main__':
                         file.write(str(d))
                         file.close()
                     else:
-                        print("Solo se pueden introducir clavers positivas.")
+                        print("Solo se pueden introducir claves positivas.")
                 except ValueError:
                     error1 = True
-                except FileNotFoundError:
-                    error2 = True
             elif op == 3:
                 try:
                     n = int(input("Introduzca el primer número de la clave pública (n): "))
                     e = int(input("Introduzca el segundo número de la clave pública (e): "))
-                    if n>0 and e>0 and d>0:
+                    if n>0 and e>0:
                         existe = os.path.exists("tusclaves.txt")
                         if existe:
                             print("Se van a registrar unas claves privadas nuevas y se van a borrar las antiguas para el destinatario")
@@ -77,11 +75,9 @@ if __name__ == '__main__':
                         file.write(str(e))
                         file.close()
                     else:
-                        print("Solo se pueden introducir clavers positivas.")
+                        print("Solo se pueden introducir claves positivas.")
                 except ValueError:
                     error1 = True
-                except FileNotFoundError:
-                    error2 = True
             elif op == 4:
                 try:
                     file = open("tusclaves.txt", "r")
@@ -94,10 +90,11 @@ if __name__ == '__main__':
                     cif = ""
                     for num in cList:
                         cif += str(num) + " "
-                    print(cif)
+                    print("Mensaje cifrado:", cif)
                 except ValueError:
                     error1 = True
                 except FileNotFoundError:
+                    print("Necesitas añadir una clave pública para el destinatario")
                     error2 = True
             elif op == 5:
                 try:
@@ -111,10 +108,11 @@ if __name__ == '__main__':
                     for i in range(len(cList)):
                         cList[i] = int(cList[i])
                     m = rsa.descifrar_cadena_rsa(cList,n,d,digitos_padding)
-                    print(m)
+                    print("Mensaje descifrado:", m)
                 except ValueError:
                     error1 = True
                 except FileNotFoundError:
+                    print("Necesitas añadir unas claves pública y privada para descifrar tus mensajes")
                     error2 = True
             elif op == 6:
                 try:
@@ -132,15 +130,18 @@ if __name__ == '__main__':
                         print(f"Las difras de padding no pueden superar las cifras de n, que son {l}")
                         digitos_padding = int(input("¿Cuántos dígitos de padding desea tener? : "))
                         if digitos_padding <= l:
-                            print("No puede haber más cifras de padding que cifras en las n")
+                            print("No puede haber más cifras de padding que cifras en las n.")
                             seguir = False
                         elif digitos_padding >= 0:
-                            print("No puede ser el padding negativo")
+                            print("No puede ser el padding negativo.")
                             seguir = False
                 except ValueError:
                     error1 = True
                 except FileNotFoundError:
                     print('Necesitas añadir las claves públicas de tanto el usuario, como el destinatario.')
+                    print('Ya que se necesita comprobar que los digitos de padding son menos que el número')
+                    print('de cifras de las n.')
+                    error2 = True
             elif op == 7:
                 continuar = False
                 if os.path.exists("misclaves.txt"):
@@ -148,16 +149,16 @@ if __name__ == '__main__':
                 if os.path.exists("tusclaves.txt"):
                     os.remove("tusclaves.txt")
             else:
-                print("No ha introducido una opción válida")
+                print("No ha introducido una opción válida.")
 
             if error1:
                 print("ValueError")
             if error2:
-                print("FileNotFound")
+                print("FileNotFoundError")
 
             print("---------------------------------------------------------------------------------------")
-            input("Presione cualquier tecla para continuar")
+            input("Presione cualquier tecla para continuar ")
             print("---------------------------------------------------------------------------------------")
 
         except ValueError:
-            print("No ha introducido una opción válida")
+            print("No ha introducido una opción válida.")

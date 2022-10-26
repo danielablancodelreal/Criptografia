@@ -60,7 +60,6 @@ def descifrar_cadena_rsa(cList: List[int], n: int, d: int, digitos_padding: int)
 
 def romper_clave(n: int, e: int) -> int:
     phin = modular.euler(n)
-    print('phin:', phin)
     d = modular.inversa_mod_p(e,phin)
     return d
 
