@@ -2,12 +2,15 @@ import math
 from typing import List, Tuple, Dict
 
 ################################ funciones #####################################
-def es_primo(n: int) -> bool:
+def es_primo(n: int) -> bool: 
     # Cualquier número negativo no es primo
     # El 1 y el 0 no son números primos, el cero es divisible por cualquier número
     if n <= 1: 
         return False
-    # Vemos si es par para que en el bucle se salte los pares
+    # Si es 2 es primo
+    if n == 2:
+        return True
+        # Vemos si es par para que en el bucle se salte los pares
     if n%2 == 0: 
         return False
     # De entre los impares, va diviendo hasta la raíz cuadrada
@@ -39,6 +42,7 @@ def lista_primos(a: int,b: int) -> List[int]:
     return lista
 
 def factorizar(n: int) -> Dict[int, int]:
+    n = abs(n)
     diccionario = {}
     i = 2
     a = n

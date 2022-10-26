@@ -125,7 +125,11 @@ if __name__ == '__main__':
                     while continuar:
                         print(f"Las difras de padding no pueden superar las cifras de n, que son {l}")
                         digitos_padding = int(input("¿Cuántos dígitos de padding desea tener? : "))
-                        if digitos_padding <= l and digitos_padding >= 0:
+                        if digitos_padding <= l:
+                            print("No puede haber más cifras de padding que cifras en las n")
+                            seguir = False
+                        elif digitos_padding >= 0:
+                            print("No puede ser el padding negativo")
                             seguir = False
                 except ValueError:
                     error1 = True
@@ -150,4 +154,4 @@ if __name__ == '__main__':
             print("---------------------------------------------------------------------------------------")
 
         except ValueError:
-            print("AA No ha introducido una opción válida")
+            print("No ha introducido una opción válida")
