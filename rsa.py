@@ -1,5 +1,6 @@
 import modular
 import random
+import math
 from typing import List, Tuple
 
 def generar_claves(min_primo: int, max_primo: int) -> Tuple[int, int, int]: 
@@ -68,4 +69,20 @@ def ataque_texto_plano(cList: List[int], n: int, e: int) -> str:
     mensaje = descifrar_cadena_rsa(cList,n,d,0)
     return mensaje
 
+def ataque_rsa(cList: List[int], n: int, e: int) -> str:
+    x = math.ceil(2*math.sqrt(n))
+    continuar = True
+    while continuar:
+        s = x**2 - 4*n
+        if math.sqrt(s) != int(math.sqrt(s)):
+            x += 1
+        else:
+            y = math.sqrt(s)
+            continuar = False
+    p = int((1/2)*(x-y))
+    q = int((1/2)*(x+y))
 
+    phin = (p-1)*(q-1)
+    d = modular.inversa_mod_p(e,phin)
+
+    return descifrar_cadena_rsa(cList,n,d,0)

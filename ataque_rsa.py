@@ -11,23 +11,7 @@ cif = '15345944278248 19103703418576 29140591527782 5504951372629 42651683427 13
 cList = cif.split(" ")
 for i in range(len(cList)):
     cList[i] = int(cList[i])
-
-x = math.ceil(2*math.sqrt(n))
-continuar = True
-while continuar:
-    s = x**2 - 4*n
-    if math.sqrt(s) != int(math.sqrt(s)):
-        x += 1
-    else:
-        y = math.sqrt(s)
-        continuar = False
-p = int((1/2)*(x-y))
-q = int((1/2)*(x+y))
-
-phin = (p-1)*(q-1)
-d = modular.inversa_mod_p(e,phin)
-
-print(rsa.descifrar_cadena_rsa(cList,n,d,0))
+print(rsa.ataque_rsa(cList, n ,e))
 
 fin = time.time()
 
